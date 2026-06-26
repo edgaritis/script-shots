@@ -5,6 +5,13 @@
   ============================================================
   Script to Shot Prompts — CHANGELOG
   ------------------------------------------------------------
+  v1.29.0
+    - New style: "Mid-century editorial" — flat geometric shapes, limited spot-
+      color palette, bold negative space, silhouette-driven figures, paper-grain
+      texture, 1950s-60s graphic-poster sensibility. Described by aesthetic
+      qualities rather than naming a specific artist/publication (cleaner for a
+      monetizing channel and less likely to be refused by generators). General
+      style — no gated block, no special mode. Reading-time default 10s.
   v1.28.0
     - Whiteboard reversed from pure t2v back to END-FRAME i2v. Testing showed
       pure t2v draws plain/loose and can't reach the detail the still-image
@@ -751,6 +758,7 @@
           <option>Cyberpunk</option>
           <option>Vintage film</option>
           <option>Minimalist / clean</option>
+          <option>Mid-century editorial</option>
           <option>Whiteboard Animation - Black &amp; White</option>
           <option>Whiteboard Animation - Blue Accent</option>
           <option>Whiteboard Animation - Red Accent</option>
@@ -994,7 +1002,7 @@
 
   <footer>
     Runs entirely in your browser. To publish: rename this file to <code>index.html</code>, push to your repo, then enable <b>GitHub&nbsp;Pages</b> (Settings → Pages → deploy from your branch).
-    <div style="margin-top:12px;opacity:.65">Script to Shot Prompts · v1.28.0</div>
+    <div style="margin-top:12px;opacity:.65">Script to Shot Prompts · v1.29.0</div>
   </footer>
 </div>
 <div id="jumpPanel" class="hidden">
@@ -1009,7 +1017,7 @@ const $ = id => document.getElementById(id);
 const MAX_CHARS = 12000;       // warn-and-cap threshold
 const MIN_CHARS = 25;
 const CJK_CPM = 240;           // chars/min fallback for CJK narration
-const APP_VERSION = "1.28.0";   // built-with version, stamped into exports
+const APP_VERSION = "1.29.0";   // built-with version, stamped into exports
 
 let RESULT = null;             // parsed model output
 let SEGMENTS = null;           // app-side segmentation (passthrough B2 mode)
@@ -1083,6 +1091,7 @@ const STYLE_RECIPES = {
   "Cyberpunk": "Neon-drenched nighttime urban environment, electric blue and magenta palette with hot pink and toxic green accents, volumetric fog catching neon light, reflective wet streets, holographic UI elements and signage, high-tech low-life contrast, shallow depth of field with anamorphic lens flares, dense layered visual information. Avoid: natural daylight, pastoral settings, muted colors, clean minimalist spaces.",
   "Vintage film": "Kodachrome or Ektachrome color rendition with warm amber highlights and faded cool shadows, visible film grain (medium to heavy), slightly desaturated midtones, soft halation around highlights, vignetting at frame edges, rounded color rolloff, period-appropriate framing. Avoid: digital sharpness, clean modern color science, HDR dynamic range, contemporary styling.",
   "Minimalist / clean": "Generous white space, flat or near-flat design, limited restrained palette (2-3 colors maximum), clean geometric composition, soft diffused even lighting, no texture or grain, sharp precise edges, calm uncluttered frame. Avoid: busy backgrounds, heavy texture, dramatic lighting, saturated or noisy color, ornate detail.",
+  "Mid-century editorial": "Mid-century modern editorial illustration: flat geometric shapes, bold simplified forms, limited spot-color palette (2-4 muted retro tones), strong negative space, silhouette-driven figures with minimal facial detail, subtle paper-grain texture, clean confident composition built around a single clear conceptual idea, 1950s-60s graphic-poster sensibility. Avoid: photorealism, smooth gradients, 3D rendering, fine rendering detail, on-screen text or lettering, busy backgrounds, clutter, ornate decoration.",
   "Whiteboard Animation - Black & White": "2D black-and-white line-art whiteboard animation on a clean white background. Black lines smoothly and progressively draw themselves with no hand visible, continuously tracing until the image is complete. Pure black-and-white line-art — no color, clean confident lines, simple shading with hatching only. One subject, centered, plenty of white space. Avoid: any visible hand or marker, color, photorealism, busy backgrounds, multiple competing subjects, on-screen text or words, sudden changes, skipped frames, visual drift, timelapse streaking.",
   "Whiteboard Animation - Blue Accent": "2D black-and-white line-art whiteboard animation on a clean white background. Black lines smoothly and progressively draw themselves with no hand visible, continuously tracing until the image is complete. Black line-art with a single blue accent color used selectively for emphasis. Clean confident lines, one subject, centered, plenty of white space. Avoid: any visible hand or marker, full color, photorealism, busy backgrounds, multiple competing subjects, on-screen text or words, sudden changes, skipped frames, visual drift, timelapse streaking.",
   "Whiteboard Animation - Red Accent": "2D black-and-white line-art whiteboard animation on a clean white background. Black lines smoothly and progressively draw themselves with no hand visible, continuously tracing until the image is complete. Black line-art with a single red accent color used selectively for emphasis. Clean confident lines, one subject, centered, plenty of white space. Avoid: any visible hand or marker, full color, photorealism, busy backgrounds, multiple competing subjects, on-screen text or words, sudden changes, skipped frames, visual drift, timelapse streaking.",
@@ -1095,6 +1104,7 @@ const STYLE_CLIPLEN = {
   "Photorealistic Landscape": 12,
   "Photorealistic Biblical": 12,
   "Cinematic": 10,
+  "Mid-century editorial": 10,
   "__custom": 6,
   "Whiteboard Animation - Black & White": 8,
   "Whiteboard Animation - Blue Accent": 8,
