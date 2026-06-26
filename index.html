@@ -5,6 +5,15 @@
   ============================================================
   Script to Shot Prompts — CHANGELOG
   ------------------------------------------------------------
+  v1.29.1
+    - Tightened the Mid-century editorial recipe (look + scene): two-tone
+      screenprint palette structure (two muted base tones + one accent),
+      halftone + offset-print misregistration texture, "figures never meet the
+      viewer's gaze; observational, not posed", and focal-hierarchy composition
+      (one clear subject, supporting elements around it, asymmetric, no centered
+      symmetry). Removed redundant/contradictory bits (hand-set-type implied
+      text). Net length unchanged — tighter, not longer. Palette kept as a
+      STRUCTURE (not hardcoded colors) so each video picks its own two-tone.
   v1.29.0
     - New style: "Mid-century editorial" — recipe: "in the manner of 1950s–60s
       New Yorker covers and Saul Bass" (flat geometric shapes, limited spot-color
@@ -1002,7 +1011,7 @@
 
   <footer>
     Runs entirely in your browser. To publish: rename this file to <code>index.html</code>, push to your repo, then enable <b>GitHub&nbsp;Pages</b> (Settings → Pages → deploy from your branch).
-    <div style="margin-top:12px;opacity:.65">Script to Shot Prompts · v1.29.0</div>
+    <div style="margin-top:12px;opacity:.65">Script to Shot Prompts · v1.29.1</div>
   </footer>
 </div>
 <div id="jumpPanel" class="hidden">
@@ -1017,7 +1026,7 @@ const $ = id => document.getElementById(id);
 const MAX_CHARS = 12000;       // warn-and-cap threshold
 const MIN_CHARS = 25;
 const CJK_CPM = 240;           // chars/min fallback for CJK narration
-const APP_VERSION = "1.29.0";   // built-with version, stamped into exports
+const APP_VERSION = "1.29.1";   // built-with version, stamped into exports
 
 let RESULT = null;             // parsed model output
 let SEGMENTS = null;           // app-side segmentation (passthrough B2 mode)
@@ -1091,7 +1100,7 @@ const STYLE_RECIPES = {
   "Cyberpunk": "Neon-drenched nighttime urban environment, electric blue and magenta palette with hot pink and toxic green accents, volumetric fog catching neon light, reflective wet streets, holographic UI elements and signage, high-tech low-life contrast, shallow depth of field with anamorphic lens flares, dense layered visual information. Avoid: natural daylight, pastoral settings, muted colors, clean minimalist spaces.",
   "Vintage film": "Kodachrome or Ektachrome color rendition with warm amber highlights and faded cool shadows, visible film grain (medium to heavy), slightly desaturated midtones, soft halation around highlights, vignetting at frame edges, rounded color rolloff, period-appropriate framing. Avoid: digital sharpness, clean modern color science, HDR dynamic range, contemporary styling.",
   "Minimalist / clean": "Generous white space, flat or near-flat design, limited restrained palette (2-3 colors maximum), clean geometric composition, soft diffused even lighting, no texture or grain, sharp precise edges, calm uncluttered frame. Avoid: busy backgrounds, heavy texture, dramatic lighting, saturated or noisy color, ornate detail.",
-  "Mid-century editorial": "Mid-century editorial illustration in the manner of 1950s–60s New Yorker covers and Saul Bass: flat geometric shapes, bold simplified forms, limited spot-color palette of muted retro tones, strong negative space, silhouette-driven figures with minimal facial detail, subtle paper-grain texture, witty conceptual composition built around a single clear idea, hand-set-type sensibility. Avoid: photorealism, 3D rendering, smooth gradients, fine rendering detail, on-screen text or lettering, busy backgrounds, clutter.",
+  "Mid-century editorial": "Mid-century editorial illustration in the manner of 1950s–60s New Yorker covers and Saul Bass: flat painterly shapes, bold simplified forms, strong negative space, one clear focal subject with supporting elements arranged around it in asymmetric intentional composition. Limited two-tone screenprint palette — two muted base tones plus a single accent color. Halftone texture and slight offset-print misregistration. Figures are silhouette-driven with minimal facial features and never meet the viewer's gaze; observational, not posed. A single clear conceptual idea per frame. Avoid: photorealism, 3D rendering, smooth gradients, fine rendering detail, centered symmetry, on-screen text or lettering, busy backgrounds, clutter.",
   "Whiteboard Animation - Black & White": "2D black-and-white line-art whiteboard animation on a clean white background. Black lines smoothly and progressively draw themselves with no hand visible, continuously tracing until the image is complete. Pure black-and-white line-art — no color, clean confident lines, simple shading with hatching only. One subject, centered, plenty of white space. Avoid: any visible hand or marker, color, photorealism, busy backgrounds, multiple competing subjects, on-screen text or words, sudden changes, skipped frames, visual drift, timelapse streaking.",
   "Whiteboard Animation - Blue Accent": "2D black-and-white line-art whiteboard animation on a clean white background. Black lines smoothly and progressively draw themselves with no hand visible, continuously tracing until the image is complete. Black line-art with a single blue accent color used selectively for emphasis. Clean confident lines, one subject, centered, plenty of white space. Avoid: any visible hand or marker, full color, photorealism, busy backgrounds, multiple competing subjects, on-screen text or words, sudden changes, skipped frames, visual drift, timelapse streaking.",
   "Whiteboard Animation - Red Accent": "2D black-and-white line-art whiteboard animation on a clean white background. Black lines smoothly and progressively draw themselves with no hand visible, continuously tracing until the image is complete. Black line-art with a single red accent color used selectively for emphasis. Clean confident lines, one subject, centered, plenty of white space. Avoid: any visible hand or marker, full color, photorealism, busy backgrounds, multiple competing subjects, on-screen text or words, sudden changes, skipped frames, visual drift, timelapse streaking.",
