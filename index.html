@@ -5,6 +5,25 @@
   ============================================================
   Script to Shot Prompts — CHANGELOG
   ------------------------------------------------------------
+  v1.30.0
+    - Mid-century editorial recipe fix: removed "silhouette-driven" (it was
+      producing faceless silhouettes) and the hard "never meet the viewer's
+      gaze" rule that made the model turn faces away / crop them out. Now:
+      "simplified flat figures with minimal but present facial features (faces
+      visible, not blank silhouettes); figures look at each other or into the
+      scene, not at the viewer." Added "faceless silhouettes" and "faces turned
+      fully away or cropped out" to Avoid.
+    - Motion (global i2v rule): the video_prompt now animates the SUBJECT'S OWN
+      ACTION (gesture, step, lift, head turn, expression), scaled to the scene —
+      not just the camera/background. Added "no talk, no conversation, no
+      dialogue, no lip movement" (figures act but don't try to render speech).
+      Affects all i2v styles; quiet scenes still imply small motion.
+    - Aspect ratio is now WRITTEN INTO every prompt as a lead phrase ("Vertical
+      9:16 composition." / "Horizontal 16:9 composition." / "Square 1:1…"),
+      not just stated once in the Agent Brief header — so a single copied prompt
+      carries its ratio. Image prompt (and t2v video prompt) get the phrase;
+      i2v video prompts don't need it (they animate a still that already has the
+      ratio). Idempotent — not double-added if already present.
   v1.29.1
     - Tightened the Mid-century editorial recipe (look + scene): two-tone
       screenprint palette structure (two muted base tones + one accent),
@@ -815,7 +834,7 @@
           <option>4:3</option>
           <option>3:4</option>
         </select>
-        <div class="hint">Stated once in the Agent Brief output.</div>
+        <div class="hint">Written into every prompt (e.g. "Vertical 9:16 composition.") and the Agent Brief header.</div>
       </div>
 
       <div>
@@ -1011,7 +1030,7 @@
 
   <footer>
     Runs entirely in your browser. To publish: rename this file to <code>index.html</code>, push to your repo, then enable <b>GitHub&nbsp;Pages</b> (Settings → Pages → deploy from your branch).
-    <div style="margin-top:12px;opacity:.65">Script to Shot Prompts · v1.29.1</div>
+    <div style="margin-top:12px;opacity:.65">Script to Shot Prompts · v1.30.0</div>
   </footer>
 </div>
 <div id="jumpPanel" class="hidden">
@@ -1026,7 +1045,7 @@ const $ = id => document.getElementById(id);
 const MAX_CHARS = 12000;       // warn-and-cap threshold
 const MIN_CHARS = 25;
 const CJK_CPM = 240;           // chars/min fallback for CJK narration
-const APP_VERSION = "1.29.1";   // built-with version, stamped into exports
+const APP_VERSION = "1.30.0";   // built-with version, stamped into exports
 
 let RESULT = null;             // parsed model output
 let SEGMENTS = null;           // app-side segmentation (passthrough B2 mode)
@@ -1100,7 +1119,7 @@ const STYLE_RECIPES = {
   "Cyberpunk": "Neon-drenched nighttime urban environment, electric blue and magenta palette with hot pink and toxic green accents, volumetric fog catching neon light, reflective wet streets, holographic UI elements and signage, high-tech low-life contrast, shallow depth of field with anamorphic lens flares, dense layered visual information. Avoid: natural daylight, pastoral settings, muted colors, clean minimalist spaces.",
   "Vintage film": "Kodachrome or Ektachrome color rendition with warm amber highlights and faded cool shadows, visible film grain (medium to heavy), slightly desaturated midtones, soft halation around highlights, vignetting at frame edges, rounded color rolloff, period-appropriate framing. Avoid: digital sharpness, clean modern color science, HDR dynamic range, contemporary styling.",
   "Minimalist / clean": "Generous white space, flat or near-flat design, limited restrained palette (2-3 colors maximum), clean geometric composition, soft diffused even lighting, no texture or grain, sharp precise edges, calm uncluttered frame. Avoid: busy backgrounds, heavy texture, dramatic lighting, saturated or noisy color, ornate detail.",
-  "Mid-century editorial": "Mid-century editorial illustration in the manner of 1950s–60s New Yorker covers and Saul Bass: flat painterly shapes, bold simplified forms, strong negative space, one clear focal subject with supporting elements arranged around it in asymmetric intentional composition. Limited two-tone screenprint palette — two muted base tones plus a single accent color. Halftone texture and slight offset-print misregistration. Figures are silhouette-driven with minimal facial features and never meet the viewer's gaze; observational, not posed. A single clear conceptual idea per frame. Avoid: photorealism, 3D rendering, smooth gradients, fine rendering detail, centered symmetry, on-screen text or lettering, busy backgrounds, clutter.",
+  "Mid-century editorial": "Mid-century editorial illustration in the manner of 1950s–60s New Yorker covers and Saul Bass: flat painterly shapes, bold simplified forms, strong negative space, one clear focal subject with supporting elements arranged around it in asymmetric intentional composition. Limited two-tone screenprint palette — two muted base tones plus a single accent color. Halftone texture and slight offset-print misregistration. Simplified flat figures with minimal but present facial features (faces visible, not hidden, not blank silhouettes); figures look at each other or into the scene, not at the viewer; observational, not posed. A single clear conceptual idea per frame. Avoid: photorealism, 3D rendering, smooth gradients, fine rendering detail, centered symmetry, faceless silhouettes, faces turned fully away or cropped out, on-screen text or lettering, busy backgrounds, clutter.",
   "Whiteboard Animation - Black & White": "2D black-and-white line-art whiteboard animation on a clean white background. Black lines smoothly and progressively draw themselves with no hand visible, continuously tracing until the image is complete. Pure black-and-white line-art — no color, clean confident lines, simple shading with hatching only. One subject, centered, plenty of white space. Avoid: any visible hand or marker, color, photorealism, busy backgrounds, multiple competing subjects, on-screen text or words, sudden changes, skipped frames, visual drift, timelapse streaking.",
   "Whiteboard Animation - Blue Accent": "2D black-and-white line-art whiteboard animation on a clean white background. Black lines smoothly and progressively draw themselves with no hand visible, continuously tracing until the image is complete. Black line-art with a single blue accent color used selectively for emphasis. Clean confident lines, one subject, centered, plenty of white space. Avoid: any visible hand or marker, full color, photorealism, busy backgrounds, multiple competing subjects, on-screen text or words, sudden changes, skipped frames, visual drift, timelapse streaking.",
   "Whiteboard Animation - Red Accent": "2D black-and-white line-art whiteboard animation on a clean white background. Black lines smoothly and progressively draw themselves with no hand visible, continuously tracing until the image is complete. Black line-art with a single red accent color used selectively for emphasis. Clean confident lines, one subject, centered, plenty of white space. Avoid: any visible hand or marker, full color, photorealism, busy backgrounds, multiple competing subjects, on-screen text or words, sudden changes, skipped frames, visual drift, timelapse streaking.",
@@ -1432,7 +1451,7 @@ const SCHEMA_PASS = `{
 function modeRules(mode, clip){
   if (mode === "i2v"){
     return `image_prompt = a complete keyframe description (subject, setting, composition, lighting, mood, style). `
-         + `video_prompt = ONLY the camera movement and subject motion that animates that keyframe over ~${clip}s — do NOT re-describe the whole scene.`;
+         + `video_prompt = the motion that animates that keyframe over ~${clip}s: the camera movement AND the subject's own action — what the figure or main subject actually DOES (a gesture, a step, lifting something, a turn of the head, an expression shift), scaled to the scene (small and quiet for a still, calm moment; more active for an energetic one). Animate the subject, not just the camera or background. Do NOT re-describe the whole scene — only the movement. No talk, no conversation, no dialogue, no lip movement.`;
   }
   return `video_prompt = a self-contained clip description (scene, subject, action, camera, lighting, style) for ~${clip}s. `
        + `image_prompt = an optional single keyframe still of the same shot.`;
@@ -1707,7 +1726,21 @@ $("parseBtn").addEventListener("click", () => {
   // append filename instruction; in i2v, anchor each video to its keyframe
   const isI2V = $("mode").value === "i2v";
   const isWB = /^Whiteboard Animation/.test($("style").value);
+  // aspect ratio → natural lead phrase, written into each prompt (not just the brief header)
+  const aspectVal = $("aspect").value || "16:9";
+  const aspectPhrase = ({
+    "16:9": "Horizontal 16:9 composition.",
+    "9:16": "Vertical 9:16 composition.",
+    "1:1":  "Square 1:1 composition.",
+    "4:3":  "Horizontal 4:3 composition.",
+    "3:4":  "Vertical 3:4 composition."
+  })[aspectVal] || ("Aspect ratio " + aspectVal + ".");
+  const hasAspect = s => /\b(horizontal|vertical|square)\b.*\bcomposition\b|aspect ratio/i.test(s);
   RESULT.shots.forEach(sh => {
+    // prepend aspect to the image prompt (the still that sets the frame)
+    let ip = (sh.image_prompt || "").trim();
+    if (ip && !hasAspect(ip)) ip = aspectPhrase + " " + ip;
+    sh.image_prompt = ip;
     const p = (sh.image_prompt || "").trimEnd();
     if (p) sh.image_prompt = p + ' make the file name "' + (sh.n ?? "") + '".';
     if (isWB){
@@ -1721,6 +1754,10 @@ $("parseBtn").addEventListener("click", () => {
     } else if (isI2V){
       const v = (sh.video_prompt || "").trim();
       if (v && !/^start from attached image/i.test(v)) sh.video_prompt = "Start from attached image as the first frame. " + v;
+    } else {
+      // t2v: no image, so the aspect phrase must lead the video prompt
+      let v = (sh.video_prompt || "").trim();
+      if (v && !hasAspect(v)) sh.video_prompt = aspectPhrase + " " + v;
     }
   });
   renderResult(data);
